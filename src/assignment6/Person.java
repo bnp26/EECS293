@@ -40,8 +40,12 @@ public class Person
         //gets the surrounding valid pillars
         ArrayList<Pillar> surroundingPillars = getSurroundingPillars(maze, mainPillar.getRowNumber(), mainPillar.getColumnNumber());
         
-        
-        
+        updateMoveStacks(currentIndex, currentMoves, surroundingPillars);
+    }
+    
+    private void updateMoveStacks(int currentIndex, Stack<Pillar> currentMoves, ArrayList<Pillar> surroundingPillars)
+    {
+        //for each of the surrounding pillars, adds the seriese of moves to the array list of stacks of Pillars
         for(int x = 0; x < surroundingPillars.size(); x++)
         {
             //this is the current pillar pillar 
@@ -50,7 +54,7 @@ public class Person
             newMoves.addAll(currentMoves);
             
             newMoves.push(currentSurroundingPillar);
-            movesArray.add(currentIndex+x, currentMoves);
+            movesArray.add(currentIndex+x, newMoves);
         }
     }
     
