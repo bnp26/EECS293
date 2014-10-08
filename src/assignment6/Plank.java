@@ -8,7 +8,7 @@ package assignment6;
 
 public enum Plank
 {
-    LEFT(0), RIGHT(1), TOP(2), BOTTOM(3);
+    NONE(-1), LEFT(0), RIGHT(1), TOP(2), BOTTOM(3);
 
     int side;
 

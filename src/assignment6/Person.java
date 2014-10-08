@@ -32,8 +32,22 @@ public class Person
         return new Stack<Pillar>();
     }
     
-    private void processCurrentPillar(Stack<Pillar> currentMoves)
+    private void processCurrentPillar(Maze maze, Stack<Pillar> currentMoves)
     {
+        int currentIndex = movesArray.indexOf(currentMoves);
+        
+        Pillar currentPillar = currentMoves.peek();
+        //gets the surrounding valid pillars
+        ArrayList<Pillar> surroundingPillars = getSurroundingPillars(maze, currentPillar.getRowNumber(), currentPillar.getColumnNumber());
+        
+        for(int x = 0; x < surroundingPillars.size(); x++)
+        {
+            Stack<Pillar> newMoves = new Stack();
+            newMoves.addAll(currentMoves);
+            newMoves.push(surroundingPillars.get(x));
+            movesArray.add(currentIndex+x, currentMoves);
+        }
+        
         
     }
     
@@ -42,9 +56,9 @@ public class Person
         return maze.getPillar(point.x, point.y);
     }
     
-    private Stack<Pillar> getSurroundingPillars(Maze maze, int row, int column)
+    private ArrayList<Pillar> getSurroundingPillars(Maze maze, int row, int column)
     {
-        Stack<Pillar> surroundingPillars = new Stack();
+        ArrayList<Pillar> surroundingPillars = new ArrayList();
         
         //number of rows in the maze
         int mazeRows = maze.numRows();
@@ -53,22 +67,14 @@ public class Person
         
         ArrayList<Point> points = new ArrayList(8);
         
-        //top left corner
-        points.add(new Point(row - 1, column - 1));
         //top
         points.add(new Point(row - 1, column));
-        //top right corner
-        points.add(new Point(row - 1, column + 1));
+        //bottom
+        points.add(new Point(row + 1, column));
         //left
         points.add(new Point(row, column - 1));
         //right
         points.add(new Point(row, column + 1));
-        //bottom left corner
-        points.add(new Point(row + 1, column - 1));
-        //bottom
-        points.add(new Point(row + 1, column));
-        //bottom right corner
-        points.add(new Point(row + 1, column + 1));
         
         //goes through the points and checks to see if they are valid
         for(Point point: points)
@@ -84,7 +90,7 @@ public class Person
     }
     
     
-    private Stack addPillarsToStack(Maze maze, ArrayList<Point> points, Stack<Pillar> pillars)
+    private ArrayList addPillarsToStack(Maze maze, ArrayList<Point> points, ArrayList<Pillar> pillars)
     {
         //go through the points in the array list of points.
         for(Point point: points)

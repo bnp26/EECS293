@@ -28,10 +28,7 @@ public class Pillar
     {
         rowNumber = row;
         columnNumber = col;
-        leftPlank = null;
-        rightPlank = null;
-        topPlank = null;
-        bottomPlank = null;
+        addPlanks(false, false, false, false);
     }
     
     public Pillar(int row, int col, boolean left, boolean right, boolean top, boolean bottom)
@@ -64,7 +61,7 @@ public class Pillar
     public void setLeftPlank(Plank leftPlank) {
         this.leftPlank = leftPlank;
     }
-
+    
     public Plank getRightPlank() {
         return rightPlank;
     }
@@ -72,7 +69,7 @@ public class Pillar
     public void setRightPlank(Plank rightPlank) {
         this.rightPlank = rightPlank;
     }
-
+    
     public Plank getTopPlank() {
         return topPlank;
     }
@@ -89,11 +86,29 @@ public class Pillar
         this.bottomPlank = bottomPlank;
     }
     
+    public boolean hasPlank(Plank plank) {
+        if(plank.getSide() == Plank.NONE.getSide())
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    
     private void addPlanks(boolean left, boolean right, boolean top, boolean bottom)
     {
-        if(left) leftPlank = Plank.LEFT;
-        if(right) rightPlank = Plank.RIGHT;
-        if(top) topPlank = Plank.TOP;
-        if(bottom) bottomPlank = Plank.BOTTOM;
+        if(left) leftPlank = Plank.LEFT; 
+        else leftPlank = Plank.NONE;
+        
+        if(right) rightPlank = Plank.RIGHT; 
+        else rightPlank = Plank.NONE;
+        
+        if(top) topPlank = Plank.TOP; 
+        else topPlank = Plank.NONE;
+        
+        if(bottom) bottomPlank = Plank.BOTTOM; 
+        else bottomPlank = Plank.NONE;
     }    
 }
