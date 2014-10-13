@@ -19,6 +19,8 @@ public class Pillar
     //bottom plank
     private Plank bottomPlank;    
    
+    private Maze maze;
+    
     /**
      * private constructor for the pillar
      * @param row
@@ -86,6 +88,23 @@ public class Pillar
         this.bottomPlank = bottomPlank;
     }
     
+    public Pillar getPillarAbove(int row, int col)
+    {
+        return maze.getPillar(row+1, col);
+    }
+    public Pillar getPillarBelow(int row, int col)
+    {
+        return maze.getPillar(row-1, col);
+    }
+    public Pillar getPillarLeft(int row, int col)
+    {
+        return maze.getPillar(row, col-1);
+    }
+    public Pillar getPillarRight(int row, int col)
+    {
+        return maze.getPillar(row+1, col+1);
+    }
+    
     public boolean hasPlank(Plank plank) {
         if(plank.getSide() == Plank.NONE.getSide())
         {
@@ -94,6 +113,35 @@ public class Pillar
         else
         {
             return true;
+        }
+    }
+    
+    public boolean hasPlank(Maze.Direction direction)
+    {
+        if(getPlank(direction.getSide())==null||getPlank(direction.getSide())==Plank.NONE)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    
+    private Plank getPlank(int direction)
+    {
+        switch(direction)
+        {
+        case 0:
+            return getLeftPlank();
+        case 1:
+            return getRightPlank();
+        case 2:
+            return getTopPlank();
+        case 3:
+            return getBottomPlank();
+        default:
+            return null;
         }
     }
     
@@ -110,5 +158,5 @@ public class Pillar
         
         if(bottom) bottomPlank = Plank.BOTTOM; 
         else bottomPlank = Plank.NONE;
-    }    
+    }
 }

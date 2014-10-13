@@ -12,24 +12,23 @@ import java.util.ArrayList;
 
 public class Person 
 {
+    private Maze maze;
     //one time use plank
     private Plank plank;
     //tells you wether the plank was used.
-    private ArrayList<Stack<Pillar>> movesArray;
+    private ArrayList<MovesStack> movesArray;
     
-    public Person()
+    public Person(Maze maze)
     {
-        movesArray = new ArrayList<Stack<Pillar>>();
+        movesArray = new ArrayList<MovesStack>();
     }
     
-    public Stack<Pillar> findShortestPath(Maze maze)
+    public MovesStack findShortestPath()
     {
         Point start = new Point(maze.numRows(), maze.numColumns());
         Point end = new Point(0, 0);
-        
-        
-        
-        return new Stack<Pillar>();
+                
+        return new MovesStack(maze);
     }
     
     private void processCurrentPillar(Maze maze, Stack<Pillar> currentMoves)
@@ -54,7 +53,7 @@ public class Person
             newMoves.addAll(currentMoves);
             
             newMoves.push(currentSurroundingPillar);
-            movesArray.add(currentIndex+x, newMoves);
+            movesArray.add(currentIndex+x, new MovesStack(maze, newMoves));
         }
     }
     
