@@ -1,11 +1,11 @@
 package assignment6;
 
+import assignment6.Maze.Direction;
 import java.util.Stack;
 /**
  *
  * @author Benjamin Poreh
  */
-
 
 public class MovesStack
 {
@@ -29,10 +29,33 @@ public class MovesStack
         return moves;
     }
     
+    public void move(Direction dir)
+    {
+        Pillar currentPillar = moves.peek();
+        Pillar nextPillar = maze.getNextPillar(currentPillar.getRowNumber(), currentPillar.getColumnNumber(), dir);
+        moves.push(nextPillar);
+    }
+    
+    public boolean hasMove(int row, int col)
+    {
+        Pillar pillar = maze.getPillar(row, col);
+        int location = moves.search(pillar);
+        
+        if(location == -1)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    
     /**
      * checks if the given row and column can be added to the current stack
      * @param row
      * @param col
+     * @param extraPlank
      * @return 
      */
     public boolean canAdd(int row, int col, boolean extraPlank)
@@ -41,7 +64,7 @@ public class MovesStack
         int currentRow = currentPillar.getRowNumber();
         int currentColumn = currentPillar.getColumnNumber();
         //check to see if the two pillars are adjacent
-        if(!isAdjacent(row, col, currentRow, currentColumn))
+        if(!maze.areAdjacent(row, col, currentRow, currentColumn)||hasMove(row, col))
         {
             return false;
         }
@@ -58,21 +81,4 @@ public class MovesStack
             return false;
         }
     }
-    
-    private boolean isAdjacent(int row1, int col1, int row2, int col2)
-    {
-        if(row1 - row2 < -1 || row1 - row2 > 1)
-        {
-            return false;
-        }
-        else if(col1 - col2 < -1 || col1 - col2 > 1)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-    
 }

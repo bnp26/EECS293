@@ -45,6 +45,22 @@ public class Maze {
         
     }
     
+    public boolean areAdjacent(int row1, int col1, int row2, int col2)
+    {
+        if(row1 - row2 < -1 || row1 - row2 > 1)
+        {
+            return false;
+        }
+        else if(col1 - col2 < -1 || col1 - col2 > 1)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    
     public Maze(int rows, int columns)
     {
         this.pillars = new Pillar[columns][rows];
