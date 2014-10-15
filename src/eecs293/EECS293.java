@@ -14,6 +14,8 @@ public class EECS293 {
      */
     public static void main(String[] args) {
         Maze maze = new Maze(4,8);
+        Person person = new Person(maze);
+        
         System.out.println(maze.toString());
     }
     

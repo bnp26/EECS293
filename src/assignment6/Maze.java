@@ -120,7 +120,27 @@ public class Maze {
         }
     }
     
-    public boolean havePlank(int row1, int col1, int row2, int col2)
+    public boolean havePlank(Pillar pillar1, Pillar pillar2)
+    {
+        int row1 = pillar1.getRowNumber();
+        int column1 = pillar1.getColumnNumber();
+        
+        int row2 = pillar2.getRowNumber();
+        int column2 = pillar2.getColumnNumber();
+        //finds the current direction
+        Direction dir = getDirection(row1, column1, row2, column2);
+        
+        if(pillar1.hasPlank(dir) && pillar2.hasPlank(dir.getOtherSide()))
+        {
+            return true;
+        }
+        else 
+        {
+            return false;
+        }     
+    }
+    
+    private boolean findPlank(int row1, int col1, int row2, int col2)
     {
         Direction dir = getDirection(row1, col1, row2, col2);
         Pillar pillar1 = getPillar(row1, col1);

@@ -23,18 +23,21 @@ public class Person
         movesArray = new ArrayList<MovesStack>();
     }
     
+    
+    
     public MovesStack findShortestPath()
     {
         Point start = new Point(0, 0);
         Point end = new Point(maze.numRows(), maze.numColumns());
-                
+        //start on current pillar
+        Pillar firstPillar = getCurrentPillar(maze, start);
         return new MovesStack(maze);
     }
     
     private void processCurrentPillar(Maze maze, MovesStack currentMoves)
     {
         int currentIndex = movesArray.indexOf(currentMoves);
-        
+          
         Pillar mainPillar = currentMoves.getCurrentPillar();
         //gets the surrounding valid pillars
         ArrayList<Pillar> surroundingPillars = getSurroundingPillars(maze, mainPillar.getRowNumber(), mainPillar.getColumnNumber());
@@ -67,9 +70,9 @@ public class Person
     private MovesStack addNewMove(MovesStack movesStack, Pillar nextMove)
     {
         //checks if it can add the next pillar and that it does not currently exist in the stack
-        if(movesStack.canAdd(nextMove.getRowNumber(), nextMove.getColumnNumber(), false)&&!movesStack.containsMove(nextMove.getRowNumber(), nextMove.getColumnNumber()))
+        if(movesStack.canAdd(nextMove.getRowNumber(), nextMove.getColumnNumber())&&!movesStack.containsMove(nextMove.getRowNumber(), nextMove.getColumnNumber()))
         {
-            int row = movesStack.getCurrentPillar().getRowNumber();
+           int row = movesStack.getCurrentPillar().getRowNumber();
             int column = movesStack.getCurrentPillar().getColumnNumber();
             //moves in the correct direction.
             movesStack.move(maze.getDirection(row, column, nextMove.getRowNumber(), nextMove.getColumnNumber()));

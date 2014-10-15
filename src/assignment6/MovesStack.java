@@ -63,27 +63,21 @@ public class MovesStack
      * @param extraPlank
      * @return 
      */
-    public boolean canAdd(int row, int col, boolean extraPlank)
+    public boolean canAdd(int row, int col)
     {
+        Pillar nextPillar = maze.getPillar(row, col);
         Pillar currentPillar = moves.peek();
+        
         int currentRow = currentPillar.getRowNumber();
         int currentColumn = currentPillar.getColumnNumber();
         //check to see if the two pillars are adjacent
-        if(!maze.areAdjacent(row, col, currentRow, currentColumn)||containsMove(row, col))
+        if(!maze.areAdjacent(row, col, currentRow, currentColumn))
         {
             return false;
-        }
-        else if(maze.havePlank(currentRow, currentColumn, row, col))
-        {
-            return true;
-        }
-        else if(extraPlank)
-        {
-            return true;
         }
         else
         {
-            return false;
+            return true;
         }
     }
 }

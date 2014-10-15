@@ -1,5 +1,7 @@
 package assignment6;
 
+import assignment6.Maze.Direction;
+
 /**
  * @author Benjamin Poreh
  * @version v1.0
@@ -113,6 +115,36 @@ public class Pillar
         else
         {
             return true;
+        }
+    }
+    
+    public Direction getDirectionTowardsPillar(Pillar pillar)
+    {
+        int row1 = rowNumber;
+        int column1 = columnNumber;
+        
+        int row2 = pillar.getRowNumber();
+        int column2 = pillar.getColumnNumber();
+        
+        if(row1 - row2 == 1)
+        {
+            return Direction.DOWN;
+        }
+        else if(row1 - row2 == -1)
+        {
+            return Direction.UP;
+        }
+        else if (column1 - column2 == 1)
+        {
+            return Direction.LEFT;
+        }
+        else if (column1 - column2 == -1)
+        {
+            return Direction.RIGHT;
+        }
+        else
+        {
+            return null;
         }
     }
     
