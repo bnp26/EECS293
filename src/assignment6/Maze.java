@@ -43,6 +43,22 @@ public class Maze {
             }
         }
         
+        public String toString()
+        {
+            switch(this)
+            {
+            case LEFT:
+                return "LEFT";
+            case RIGHT:
+                return "RIGHT";
+            case UP:
+                return "UP";
+            case DOWN:
+                return "DOWN";
+            default:
+                return null;
+            }
+        }
     }
     
     public boolean areAdjacent(int row1, int col1, int row2, int col2)
@@ -88,47 +104,11 @@ public class Maze {
             return null;
         }
     }
-    /**
-     * Assuming the pillar is adjacent, gets the direction given the 2 pillar's rows and columns
-     * @param row1
-     * @param col1
-     * @param row2
-     * @param col2
-     * @return 
-     */
-    public Direction getDirection(int row1, int col1, int row2, int col2)
-    {
-        if(row1 - row2 == 1)
-        {
-            return Direction.DOWN;
-        }
-        else if(row1 - row2 == -1)
-        {
-            return Direction.UP;
-        }
-        else if (col1 - col2 == 1)
-        {
-            return Direction.LEFT;
-        }
-        else if (col1 - col2 == -1)
-        {
-            return Direction.RIGHT;
-        }
-        else
-        {
-            return null;
-        }
-    }
     
     public boolean havePlank(Pillar pillar1, Pillar pillar2)
     {
-        int row1 = pillar1.getRowNumber();
-        int column1 = pillar1.getColumnNumber();
-        
-        int row2 = pillar2.getRowNumber();
-        int column2 = pillar2.getColumnNumber();
         //finds the current direction
-        Direction dir = getDirection(row1, column1, row2, column2);
+        Direction dir = pillar1.getDirectionTowardsPillar(pillar2);
         
         if(pillar1.hasPlank(dir) && pillar2.hasPlank(dir.getOtherSide()))
         {
@@ -140,11 +120,9 @@ public class Maze {
         }     
     }
     
-    private boolean findPlank(int row1, int col1, int row2, int col2)
+    private boolean findPlank(Pillar pillar1, Pillar pillar2)
     {
-        Direction dir = getDirection(row1, col1, row2, col2);
-        Pillar pillar1 = getPillar(row1, col1);
-        Pillar pillar2 = getNextPillar(row1, col1, dir);
+        Direction dir = pillar1.getDirectionTowardsPillar(pillar2);
         
         if(pillar1.hasPlank(dir) && pillar2.hasPlank(dir.getOtherSide()))
         {

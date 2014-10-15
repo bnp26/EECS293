@@ -23,6 +23,11 @@ public class NewPerson
         plank = false;
     }
     
+    public Pillar getCurrentPillar()
+    {
+        return movesStack.getCurrentPillar();
+    }
+    
     public boolean makeMove(Pillar nextPillar)
     {
         Pillar currentPillar = movesStack.getCurrentPillar();
@@ -33,10 +38,8 @@ public class NewPerson
         //checks if it can add the next pillar and that it does not currently exist in the stack
         if(movesStack.canAdd(nextPillar.getRowNumber(), nextPillar.getColumnNumber())&&!movesStack.containsMove(nextPillar.getRowNumber(), nextPillar.getColumnNumber()))
         {
-            int row = movesStack.getCurrentPillar().getRowNumber();
-            int column = movesStack.getCurrentPillar().getColumnNumber();
             //moves in the correct direction.
-            movesStack.move(maze.getDirection(row, column, nextPillar.getRowNumber(), nextPillar.getColumnNumber()));
+            movesStack.move(dir);
             if(!currentPlank)
             {
                 plank = true;
@@ -47,11 +50,6 @@ public class NewPerson
         {
             return false;
         }
-    }
-    
-    public Pillar getCurrentPillar()
-    {
-        return movesStack.getCurrentPillar();
     }
     
     public ArrayList<Pillar> getSurroundingPillars(Pillar pillar)

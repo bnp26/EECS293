@@ -58,42 +58,32 @@ public class Pillar
         this.columnNumber = columnNumber;
     }
 
+    public void setPlanks(boolean left, boolean right, boolean up, boolean down)
+    {
+        addPlanks(left, right, up, down);
+    }
+    
     public Plank getLeftPlank() {
         return leftPlank;
-    }
-
-    public void setLeftPlank(Plank leftPlank) {
-        this.leftPlank = leftPlank;
     }
     
     public Plank getRightPlank() {
         return rightPlank;
     }
 
-    public void setRightPlank(Plank rightPlank) {
-        this.rightPlank = rightPlank;
-    }
-    
     public Plank getTopPlank() {
         return topPlank;
-    }
-
-    public void setTopPlank(Plank topPlank) {
-        this.topPlank = topPlank;
     }
 
     public Plank getBottomPlank() {
         return bottomPlank;
     }
 
-    public void setBottomPlank(Plank bottomPlank) {
-        this.bottomPlank = bottomPlank;
-    }
-    
     public Pillar getPillarAbove(int row, int col)
     {
         return maze.getPillar(row+1, col);
     }
+    
     public Pillar getPillarBelow(int row, int col)
     {
         return maze.getPillar(row-1, col);

@@ -80,4 +80,26 @@ public class MovesStack
             return true;
         }
     }
+    
+    public String toString()
+    {
+        String str = "";
+        Pillar currentPillar = moves.get(0);
+        
+        for(int x = 1; x < moves.size()-2; x++)
+        {
+            str += moveToString(currentPillar,moves.get(x));
+            str += ", ";
+            currentPillar = moves.get(x);
+        }
+        
+        str += moveToString(currentPillar,moves.peek());
+        str += ".";
+        return str;
+    }
+    
+    private String moveToString(Pillar pillar1, Pillar pillar2)
+    {
+        return pillar1.getDirectionTowardsPillar(pillar2).toString();
+    }
 }

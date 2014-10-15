@@ -72,10 +72,8 @@ public class Person
         //checks if it can add the next pillar and that it does not currently exist in the stack
         if(movesStack.canAdd(nextMove.getRowNumber(), nextMove.getColumnNumber())&&!movesStack.containsMove(nextMove.getRowNumber(), nextMove.getColumnNumber()))
         {
-           int row = movesStack.getCurrentPillar().getRowNumber();
-            int column = movesStack.getCurrentPillar().getColumnNumber();
             //moves in the correct direction.
-            movesStack.move(maze.getDirection(row, column, nextMove.getRowNumber(), nextMove.getColumnNumber()));
+            //movesStack.move(.getDirection(row, column, nextMove.getRowNumber(), nextMove.getColumnNumber()));
             return movesStack;
         }
         else
