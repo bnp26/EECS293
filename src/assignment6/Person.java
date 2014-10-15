@@ -25,35 +25,59 @@ public class Person
     
     public MovesStack findShortestPath()
     {
-        Point start = new Point(maze.numRows(), maze.numColumns());
-        Point end = new Point(0, 0);
+        Point start = new Point(0, 0);
+        Point end = new Point(maze.numRows(), maze.numColumns());
                 
         return new MovesStack(maze);
     }
     
-    private void processCurrentPillar(Maze maze, Stack<Pillar> currentMoves)
+    private void processCurrentPillar(Maze maze, MovesStack currentMoves)
     {
         int currentIndex = movesArray.indexOf(currentMoves);
         
-        Pillar mainPillar = currentMoves.peek();
+        Pillar mainPillar = currentMoves.getCurrentPillar();
         //gets the surrounding valid pillars
         ArrayList<Pillar> surroundingPillars = getSurroundingPillars(maze, mainPillar.getRowNumber(), mainPillar.getColumnNumber());
         
         updateMoveStacks(currentIndex, currentMoves, surroundingPillars);
     }
     
-    private void updateMoveStacks(int currentIndex, Stack<Pillar> currentMoves, ArrayList<Pillar> surroundingPillars)
+    private void updateMoveStacks(int currentIndex, MovesStack movesStack, ArrayList<Pillar> surroundingPillars)
     {
         //for each of the surrounding pillars, adds the seriese of moves to the array list of stacks of Pillars
         for(int x = 0; x < surroundingPillars.size(); x++)
         {
             //this is the current pillar pillar 
             Pillar currentSurroundingPillar = surroundingPillars.get(x);
-            Stack<Pillar> newMoves = new Stack();
-            newMoves.addAll(currentMoves);
+            //get's the current pillars location in the maze
+            int rowNumber = currentSurroundingPillar.getRowNumber();
+            int columnNumber = currentSurroundingPillar.getColumnNumber();
+            //checks the current movesStack to see if it contains this pillar
+            movesStack.containsMove(rowNumber, columnNumber);
             
-            newMoves.push(currentSurroundingPillar);
-            movesArray.add(currentIndex+x, new MovesStack(maze, newMoves));
+            MovesStack newMoves = new MovesStack(maze, movesStack.getStack());
+            MovesStack newMovesStack = addNewMove(newMoves, currentSurroundingPillar);
+            if(newMovesStack!=null)
+            {
+                 movesArray.add(currentIndex+x, newMovesStack);
+            }
+        }
+    }
+    
+    private MovesStack addNewMove(MovesStack movesStack, Pillar nextMove)
+    {
+        //checks if it can add the next pillar and that it does not currently exist in the stack
+        if(movesStack.canAdd(nextMove.getRowNumber(), nextMove.getColumnNumber(), false)&&!movesStack.containsMove(nextMove.getRowNumber(), nextMove.getColumnNumber()))
+        {
+            int row = movesStack.getCurrentPillar().getRowNumber();
+            int column = movesStack.getCurrentPillar().getColumnNumber();
+            //moves in the correct direction.
+            movesStack.move(maze.getDirection(row, column, nextMove.getRowNumber(), nextMove.getColumnNumber()));
+            return movesStack;
+        }
+        else
+        {
+            return null;
         }
     }
     

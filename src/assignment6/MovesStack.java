@@ -36,7 +36,7 @@ public class MovesStack
         moves.push(nextPillar);
     }
     
-    public boolean hasMove(int row, int col)
+    public boolean containsMove(int row, int col)
     {
         Pillar pillar = maze.getPillar(row, col);
         int location = moves.search(pillar);
@@ -49,6 +49,11 @@ public class MovesStack
         {
             return true;
         }
+    }
+    
+    public Pillar getCurrentPillar()
+    {
+        return moves.peek();
     }
     
     /**
@@ -64,7 +69,7 @@ public class MovesStack
         int currentRow = currentPillar.getRowNumber();
         int currentColumn = currentPillar.getColumnNumber();
         //check to see if the two pillars are adjacent
-        if(!maze.areAdjacent(row, col, currentRow, currentColumn)||hasMove(row, col))
+        if(!maze.areAdjacent(row, col, currentRow, currentColumn)||containsMove(row, col))
         {
             return false;
         }
