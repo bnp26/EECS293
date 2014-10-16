@@ -1,164 +1,111 @@
 package assignment6;
 
-import java.awt.Point;
-import java.util.Stack;
 import java.util.ArrayList;
+import assignment6.Maze.Direction;
+import java.awt.Point;
 /**
  *
  * @author Benjamin Poreh
- * @version v1.0
  */
 
 
 public class Person 
 {
     private Maze maze;
-    //one time use plank
-    private Plank plank;
-    //tells you wether the plank was used.
-    private ArrayList<MovesStack> movesArray;
+    private MovesStack movesStack;
+    boolean plank;
     
     public Person(Maze maze)
     {
-        movesArray = new ArrayList<MovesStack>();
+        this.maze = maze;
+        movesStack = new MovesStack(maze);
+        plank = false;
     }
     
-    
-    
-    public MovesStack findShortestPath()
+    public Person(Maze maze, Pillar firstPillar)
     {
-        Point start = new Point(0, 0);
-        Point end = new Point(maze.numRows(), maze.numColumns());
-        //start on current pillar
-        Pillar firstPillar = getCurrentPillar(maze, start);
-        return new MovesStack(maze);
+        this.maze = maze;
+        movesStack = new MovesStack(maze, firstPillar);
+        plank = false;
     }
     
-    private void processCurrentPillar(Maze maze, MovesStack currentMoves)
+    public Maze getMaze()
     {
-        int currentIndex = movesArray.indexOf(currentMoves);
-          
-        Pillar mainPillar = currentMoves.getCurrentPillar();
-        //gets the surrounding valid pillars
-        ArrayList<Pillar> surroundingPillars = getSurroundingPillars(maze, mainPillar.getRowNumber(), mainPillar.getColumnNumber());
+        return maze;
+    }
+    
+    public MovesStack getMovesStack()
+    {
+        return movesStack;
+    }
+    
+    public boolean hasPlank()
+    {
+        return plank;
+    }
+    
+    public Pillar getCurrentPillar()
+    {
+        return movesStack.getCurrentPillar();
+    }
+    
+    public boolean makeMove(Pillar nextPillar)
+    {
+        Pillar currentPillar = movesStack.getCurrentPillar();
+        Direction dir = currentPillar.getDirectionTowardsPillar(nextPillar);
         
-        updateMoveStacks(currentIndex, currentMoves, surroundingPillars);
-    }
-    
-    private void updateMoveStacks(int currentIndex, MovesStack movesStack, ArrayList<Pillar> surroundingPillars)
-    {
-        //for each of the surrounding pillars, adds the seriese of moves to the array list of stacks of Pillars
-        for(int x = 0; x < surroundingPillars.size(); x++)
+        boolean currentPlank = maze.havePlank(currentPillar, nextPillar);
+        
+        //checks if it can add the next pillar and that it does not currently exist in the stack
+        if(movesStack.canAdd(nextPillar)&&!movesStack.containsMove(nextPillar))
         {
-            //this is the current pillar pillar 
-            Pillar currentSurroundingPillar = surroundingPillars.get(x);
-            //get's the current pillars location in the maze
-            int rowNumber = currentSurroundingPillar.getRowNumber();
-            int columnNumber = currentSurroundingPillar.getColumnNumber();
-            //checks the current movesStack to see if it contains this pillar
-            movesStack.containsMove(rowNumber, columnNumber);
-            
-            MovesStack newMoves = new MovesStack(maze, movesStack.getStack());
-            MovesStack newMovesStack = addNewMove(newMoves, currentSurroundingPillar);
-            if(newMovesStack!=null)
+            if(canMoveInDirection(dir, currentPlank))
             {
-                 movesArray.add(currentIndex+x, newMovesStack);
+                movesStack.move(dir);
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
+        else
+        {
+            return false;
+        }
     }
     
-    private MovesStack addNewMove(MovesStack movesStack, Pillar nextMove)
+    private boolean canMoveInDirection(Direction dir, boolean hasPlank)
     {
-        //checks if it can add the next pillar and that it does not currently exist in the stack
-        if(movesStack.canAdd(nextMove.getRowNumber(), nextMove.getColumnNumber())&&!movesStack.containsMove(nextMove.getRowNumber(), nextMove.getColumnNumber()))
+        //moves in the correct direction.
+        if(hasPlank)
         {
-            //moves in the correct direction.
-            //movesStack.move(.getDirection(row, column, nextMove.getRowNumber(), nextMove.getColumnNumber()));
-            return movesStack;
+            return true;
+        }
+        else if(this.plank)
+        {
+            return false;
         }
         else
         {
-            return null;
+            setPlankAsTrue();
+            return true;
         }
     }
     
-    //pre-condition: the two pillars are next to one another
-    private boolean hasPlank(Pillar pillar1, Pillar pillar2)
+    private void setPlankAsTrue()
     {
-        //pillar1's row number
-        int pillarOneRowNumber = pillar1.getRowNumber();
-        //pillar1's column number
-        int pillarOneColumnNumber = pillar1.getColumnNumber();
-        
-        //pillar2's row number
-        int pillarTwoRowNumber = pillar2.getRowNumber();
-        //pillar2's column number
-        int pillarTwoColumnNumber = pillar2.getColumnNumber();
-        
-        int plankLocation = getPlank(pillarOneRowNumber, pillarOneColumnNumber,
-                                     pillarTwoRowNumber, pillarTwoColumnNumber);
-        
-        return checkForPlank(pillar1, plankLocation);
+        this.plank = true;
     }
     
-    private boolean checkForPlank(Pillar pillar, int plankLocation)
+    public ArrayList<Pillar> getSurroundingPillars()
     {
-        boolean hasPlank;
-        switch(plankLocation)
-        {
-            case 0:
-                //checking left plank
-                hasPlank = pillar.getLeftPlank()!=Plank.NONE;
-                break;
-            case 1:
-                //checking right plank
-                hasPlank = pillar.getRightPlank()!=Plank.NONE;
-                break;
-            case 2:
-                //checking top plank
-                hasPlank = pillar.getTopPlank()!=Plank.NONE;
-                break; 
-            case 3:
-                //checking bottom plank
-                hasPlank = pillar.getBottomPlank()!=Plank.NONE;
-                break;
-            default:
-                hasPlank = false;
-        }
-        return hasPlank;
-    }
-    
-    private int getPlank(int row1, int col1, int row2, int col2)
-    {
-        int plankLocation;
-        if(row1 == row2)
-        {
-            //if column1 > column2 returns left. Otherwise, returns right.
-            plankLocation = (col1 > col2)?0:1;
-        }
-        else
-        {
-            //if row1 > row2 returns bottom. Otherwise, returns top
-            plankLocation = (row1 > row2)?3:2;
-        }
-        return plankLocation;
-    }
-    
-    private Pillar getCurrentPillar(Maze maze, Point point)
-    {
-        return maze.getPillar(point.x, point.y);
-    }
-    
-    private ArrayList<Pillar> getSurroundingPillars(Maze maze, int row, int column)
-    {
-        ArrayList<Pillar> surroundingPillars = new ArrayList();
+        Pillar pillar = getCurrentPillar();
         
-        //number of rows in the maze
-        int mazeRows = maze.numRows();
-        //number of columns in the maze
-        int mazeColumns = maze.numColumns();
+        ArrayList<Point> points = new ArrayList(4);
         
-        ArrayList<Point> points = new ArrayList(8);
+        int row = pillar.getRowNumber();
+        int column = pillar.getColumnNumber();
         
         //top
         points.add(new Point(row - 1, column));
@@ -169,33 +116,52 @@ public class Person
         //right
         points.add(new Point(row, column + 1));
         
+        points = processPointValidities(points);
+        
+        return arrayOfPillarsFromPoints(maze, points);
+    }
+    
+    private ArrayList<Point> processPointValidities(ArrayList<Point> points)
+    {
+        //number of rows in the maze
+        int mazeRows = maze.numRows();
+        //number of columns in the maze
+        int mazeColumns = maze.numColumns();
+        
         //goes through the points and checks to see if they are valid
-        for(Point point: points)
+        for(int x = 0; x < points.size(); x = x)
         {
+            Point point = points.get(x);
             //if the point is not valid, removes the point from the array lists of points
+            //if the pillar is not aggenst any wall/barrier
             if(!isPointValid(point, mazeRows, mazeColumns))
             {
-                points.remove(point);
+                points.remove(x);
+                continue;
+            }
+            x++;
+        }
+        return points;
+    }
+    
+    public void addMoves(MovesStack stack)
+    {
+        for(Pillar pillar:stack.getStack())
+        {
+            if(this.movesStack.size()==0)
+            {
+                movesStack.getStack().push(pillar);
+            }
+            else
+            { 
+                boolean makeMove = this.makeMove(pillar);
+                if(!makeMove)
+                    break;
             }
         }
-        
-        return addPillarsToStack(maze, points, surroundingPillars);
     }
     
-    
-    private ArrayList addPillarsToStack(Maze maze, ArrayList<Point> points, ArrayList<Pillar> pillars)
-    {
-        //go through the points in the array list of points.
-        for(Point point: points)
-        {
-            //find the pillar associated with the given point
-            Pillar currentPillar = maze.getPillar(point.x, point.y);
-            //add the pillar to the stack of pillars
-            pillars.add(currentPillar);
-        }
-        return pillars;
-    }
-    
+    //checks that both the row number and the column number is valid (past the mazes wall)
     private boolean isPointValid(Point point, int numRows, int numColumns)
     {
         if(isRowValid(point.x, numRows) && isColumnValid(point.y, numColumns))
@@ -208,14 +174,39 @@ public class Person
         }
     }
     
+    //adds 
+    private ArrayList<Pillar> arrayOfPillarsFromPoints(Maze maze, ArrayList<Point> points)
+    {
+        ArrayList<Pillar> pillars = new ArrayList<Pillar>();
+        //go through the points in the array list of points.
+        for(Point point: points)
+        {
+            //find the pillar associated with the given point
+            Pillar currentPillar = maze.getPillar(point.x, point.y);
+            //add the pillar to the stack of pillars
+            pillars.add(currentPillar);
+        }
+        return pillars;
+    }
+    
     private boolean isRowValid(int row, int numRows)
     {
-        return (row >= 0 && row <= numRows);
+        return (row >= 0 && row < numRows);
     }
     
     private boolean isColumnValid(int column, int numColumns)
     {
-        return (column >= 0 && column <= numColumns);
-    } 
+        return (column >= 0 && column < numColumns);
+    }
+    
+    public boolean finished()
+    {
+        return movesStack.onLastPillar();
+    }
+    
+    public String toString()
+    {
+        return movesStack.toString();
+    }
     
 }

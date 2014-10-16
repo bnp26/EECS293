@@ -2,6 +2,10 @@ package eecs293;
 
 import assignment6.*;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 /**
  *
  * @author Benjamin
@@ -108,48 +112,72 @@ public class EECS293 {
         pillarR4C3.setPlanks(false, false, true, false);
         pillarR4C4.setPlanks(false, false, true, false);
         
-        ArrayList<NewPerson> people = new ArrayList<NewPerson>();
-        NewPerson person = new NewPerson(maze);
+        List<Person> people = new ArrayList<Person>();
+        
+        Person person = new Person(maze, pillarR0C0);
+        
+        System.out.println(person);
         people.add(person);
+        int peopleSize = people.size();
+        boolean finished = false;
         
-        int counter = 0;
-        
-        while(people!=null||(people.get(people.size()-1).getCurrentPillar()).equals(maze.getPillar(maze.numRows(), maze.numColumns())))
+        while(people.size()!=0&&!finished)
         {
-            for(NewPerson currentPerson: people)
+            if(people.get(people.size()-1).finished())
             {
-                people.addAll(processPerson(currentPerson));
+                finished = true;
+                break;
             }
+            ArrayList<Person> allPeople = new ArrayList<Person>();
+            for(int x = 0; x < people.size(); x++)
+            {
+                Person currentPerson = people.get(x);
+                System.out.println("people size: "+people.size());
+                allPeople.addAll(processPerson(currentPerson));
+            }
+            people = allPeople;
         }
-        for(NewPerson current: people)
+    
+        for(Person current: people)
         {
-            current.toString();
+            System.out.println(current);
         }
     }
     
-    private static ArrayList<NewPerson> processPerson(NewPerson person)
+    private static ArrayList<Person> processPerson(Person person)
     {
-        ArrayList<NewPerson> newPeople = new ArrayList<NewPerson>();
-        ArrayList<Pillar> surroundingPillars = person.getSurroundingPillars(person.getCurrentPillar());
+        ArrayList<Person> people = new ArrayList<Person>();
+        ArrayList<Pillar> surroundingPillars = person.getSurroundingPillars();
+        ArrayList<Boolean> madeMoves = new ArrayList<Boolean>();
         
-        int numSurroundingPillars = surroundingPillars.size();
-        for(Pillar pillar: surroundingPillars)
+        for(int x = 0; x < surroundingPillars.size(); x++)
         {
-            newPeople.add(person);   
+            Person newPerson = new Person(person.getMaze());
+            
+            newPerson.addMoves(person.getMovesStack());
+            
+            Pillar currentPillar = surroundingPillars.get(x);
+            boolean madeMove = newPerson.makeMove(currentPillar);
+            madeMoves.add(madeMove);
+            people.add(newPerson);
         }
-        
-        for(int x = 0; x < newPeople.size(); x++)
+        System.out.println(people.size());
+        for(int x = 0; x < people.size(); x++)
         {
-            NewPerson currentPerson = newPeople.get(x);
-            if(!currentPerson.makeMove(surroundingPillars.get(x)))
+            Person currentPerson = people.get(x);
+            if(madeMoves.get(x))
             {
-                newPeople.remove(x);
+                continue;
+            }
+            else
+            {
+                people.remove(x);
                 surroundingPillars.remove(x);
+                madeMoves.remove(x);
                 x--;
             }
         }
-        
-        return newPeople;
+        return people;
     }
     
 }

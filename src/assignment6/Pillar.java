@@ -13,13 +13,13 @@ public class Pillar
     //the column number that the pillar is apart of in the maze (y value)
     private int columnNumber;
     //left plank
-    private Plank leftPlank;
+    private boolean leftPlank;
     //right plank
-    private Plank rightPlank;
+    private boolean rightPlank;
     //top plank
-    private Plank topPlank;
+    private boolean topPlank;
     //bottom plank
-    private Plank bottomPlank;    
+    private boolean bottomPlank;    
    
     private Maze maze;
     
@@ -63,19 +63,19 @@ public class Pillar
         addPlanks(left, right, up, down);
     }
     
-    public Plank getLeftPlank() {
+    public boolean hasLeftPlank() {
         return leftPlank;
     }
     
-    public Plank getRightPlank() {
+    public boolean hasRightPlank() {
         return rightPlank;
     }
 
-    public Plank getTopPlank() {
+    public boolean hasTopPlank() {
         return topPlank;
     }
 
-    public Plank getBottomPlank() {
+    public boolean hasBottomPlank() {
         return bottomPlank;
     }
 
@@ -97,17 +97,6 @@ public class Pillar
         return maze.getPillar(row+1, col+1);
     }
     
-    public boolean hasPlank(Plank plank) {
-        if(plank.getSide() == Plank.NONE.getSide())
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-    
     public Direction getDirectionTowardsPillar(Pillar pillar)
     {
         int row1 = rowNumber;
@@ -116,11 +105,11 @@ public class Pillar
         int row2 = pillar.getRowNumber();
         int column2 = pillar.getColumnNumber();
         
-        if(row1 - row2 == 1)
+        if(row1 - row2 == -1)
         {
             return Direction.DOWN;
         }
-        else if(row1 - row2 == -1)
+        else if(row1 - row2 == 1)
         {
             return Direction.UP;
         }
@@ -134,51 +123,33 @@ public class Pillar
         }
         else
         {
-            return null;
+            return Direction.NONE;
         }
     }
     
-    public boolean hasPlank(Maze.Direction direction)
+    public boolean hasPlank(Direction dir)
     {
-        if(getPlank(direction.getSide())==null||getPlank(direction.getSide())==Plank.NONE)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-    
-    private Plank getPlank(int direction)
-    {
-        switch(direction)
-        {
-        case 0:
-            return getLeftPlank();
-        case 1:
-            return getRightPlank();
-        case 2:
-            return getTopPlank();
-        case 3:
-            return getBottomPlank();
-        default:
-            return null;
-        }
+        if(dir == Direction.LEFT)
+            return leftPlank;
+        else if(dir == Direction.RIGHT)
+            return rightPlank;
+        else if(dir == Direction.UP)
+            return topPlank;
+        else if(dir == Direction.DOWN)
+            return bottomPlank;
+        return false;
     }
     
     private void addPlanks(boolean left, boolean right, boolean top, boolean bottom)
     {
-        if(left) leftPlank = Plank.LEFT; 
-        else leftPlank = Plank.NONE;
-        
-        if(right) rightPlank = Plank.RIGHT; 
-        else rightPlank = Plank.NONE;
-        
-        if(top) topPlank = Plank.TOP; 
-        else topPlank = Plank.NONE;
-        
-        if(bottom) bottomPlank = Plank.BOTTOM; 
-        else bottomPlank = Plank.NONE;
+        leftPlank = left;
+        rightPlank = right;
+        topPlank = top;
+        bottomPlank = bottom;
+    }
+    
+    public String toString()
+    {
+        return "("+rowNumber+", "+columnNumber+")";
     }
 }

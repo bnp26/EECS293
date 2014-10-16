@@ -13,7 +13,7 @@ public class Maze {
     
     public static enum Direction
     {
-         LEFT(0), RIGHT(1), UP(2), DOWN(3);
+         NONE(-1), LEFT(0), RIGHT(1), UP(2), DOWN(3);
          int side;
 
         private Direction(int side)
@@ -45,24 +45,30 @@ public class Maze {
         
         public String toString()
         {
-            switch(this)
+            switch(this.side)
             {
-            case LEFT:
+            case 0:
                 return "LEFT";
-            case RIGHT:
+            case 1:
                 return "RIGHT";
-            case UP:
+            case 2:
                 return "UP";
-            case DOWN:
+            case 3:
                 return "DOWN";
             default:
-                return null;
+                return "None";
             }
         }
     }
     
-    public boolean areAdjacent(int row1, int col1, int row2, int col2)
+    //checks if the two pillars are adjacent
+    public boolean areAdjacent(Pillar pillar1, Pillar pillar2)
     {
+        int row1 = pillar1.getRowNumber();
+        int col1 = pillar1.getColumnNumber();
+        int row2 = pillar2.getRowNumber();
+        int col2 = pillar2.getColumnNumber();
+        
         if(row1 - row2 < -1 || row1 - row2 > 1)
         {
             return false;
@@ -97,9 +103,9 @@ public class Maze {
         case RIGHT:
             return getPillar(row, col+1);
         case UP:
-            return getPillar(row+1, col);
-        case DOWN:
             return getPillar(row-1, col);
+        case DOWN:
+            return getPillar(row+1, col);
         default:
             return null;
         }
@@ -163,10 +169,12 @@ public class Maze {
     public String toString()
     {
         String str = "";
+        //column
         for(int y = 0; y < pillars[0].length; y++)
         {
+            //row
             for(int x = 0; x < pillars.length; x++)
-            {   
+            {
                 str+="[]\t";
             }
             str+="\n";
