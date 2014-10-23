@@ -1,5 +1,4 @@
 package assignment6;
-
 import java.util.ArrayList;
 
 /**
@@ -61,6 +60,11 @@ public class Maze {
         }
     }
     
+    public Pillar getStartingPillar()
+    {
+        return this.getPillar(0, 0);
+    }
+    
     //checks if the two pillars are adjacent
     public boolean areAdjacent(Pillar pillar1, Pillar pillar2)
     {
@@ -68,11 +72,14 @@ public class Maze {
         int col1 = pillar1.getColumnNumber();
         int row2 = pillar2.getRowNumber();
         int col2 = pillar2.getColumnNumber();
+     
         
+        //if the first row is not adjacent to the second, return false
         if(row1 - row2 < -1 || row1 - row2 > 1)
         {
             return false;
         }
+        //if the first column is not adjacent to the second, return false;
         else if(col1 - col2 < -1 || col1 - col2 > 1)
         {
             return false;
@@ -114,9 +121,8 @@ public class Maze {
     public boolean havePlank(Pillar pillar1, Pillar pillar2)
     {
         //finds the current direction
-        Direction dir = pillar1.getDirectionTowardsPillar(pillar2);
-        
-        if(pillar1.hasPlank(dir) && pillar2.hasPlank(dir.getOtherSide()))
+    	Direction dir = pillar1.getDirectionTowardsPillar(pillar2);
+    	if(pillar1.hasPlank(dir) && pillar2.hasPlank(dir.getOtherSide()))
         {
             return true;
         }
@@ -147,16 +153,17 @@ public class Maze {
     
     public int numColumns()
     {
-        return pillars[0].length;
+        return pillars.length;
     }
      
     public int numRows()
     {
-        return pillars.length;
+        return pillars[0].length;
     }
     
     private void populateEmptyMaze()
     {
+        //goes through the 2D array and adds empty pillars to that array
         for(int y = 0; y < pillars.length; y++)
         {
             for(int x = 0; x < pillars[0].length; x++)

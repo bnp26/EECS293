@@ -1,5 +1,4 @@
 package assignment6;
-
 import assignment6.Maze.Direction;
 
 /**

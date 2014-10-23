@@ -1,8 +1,8 @@
 package assignment6;
-
 import java.util.ArrayList;
-import assignment6.Maze.Direction;
 import java.awt.Point;
+
+import assignment6.Maze.Direction;
 /**
  *
  * @author Benjamin Poreh
@@ -134,7 +134,7 @@ public class Person
             Point point = points.get(x);
             //if the point is not valid, removes the point from the array lists of points
             //if the pillar is not aggenst any wall/barrier
-            if(!isPointValid(point, mazeRows, mazeColumns))
+            if(!isPointValid(point))
             {
                 points.remove(x);
                 continue;
@@ -162,9 +162,9 @@ public class Person
     }
     
     //checks that both the row number and the column number is valid (past the mazes wall)
-    private boolean isPointValid(Point point, int numRows, int numColumns)
+    private boolean isPointValid(Point point)
     {
-        if(isRowValid(point.x, numRows) && isColumnValid(point.y, numColumns))
+        if(isRowValid(point.x) && isColumnValid(point.y))
         {
             return true;
         }
@@ -189,14 +189,14 @@ public class Person
         return pillars;
     }
     
-    private boolean isRowValid(int row, int numRows)
+    private boolean isRowValid(int row)
     {
-        return (row >= 0 && row < numRows);
+        return (row >= 0 && row < maze.numRows());
     }
     
-    private boolean isColumnValid(int column, int numColumns)
+    private boolean isColumnValid(int column)
     {
-        return (column >= 0 && column < numColumns);
+        return (column >= 0 && column < maze.numColumns());
     }
     
     public boolean finished()

@@ -1,7 +1,7 @@
 package assignment6;
+import java.util.Stack;
 
 import assignment6.Maze.Direction;
-import java.util.Stack;
 /**
  *
  * @author Benjamin Poreh
